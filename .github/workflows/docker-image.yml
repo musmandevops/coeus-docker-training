@@ -1,0 +1,47 @@
+name: Deploy Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+      environment:
+        description: 'Select the environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - int
+          - cons
+          - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Set Environment
+        run: echo "Deploying to ${{ github.event.inputs.environment }} environment"
+
+      # Add further steps for deployment based on the selected environment
+      - name: Deploy to ${{ github.event.inputs.environment }}
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
+            echo "Deploying to Dev Environment..."
+            # Add your specific deployment steps for Dev
+          elif [ "${{ github.event.inputs.environment }}" == "int" ]; then
+            echo "Deploying to Int Environment..."
+            # Add your specific deployment steps for Int
+          elif [ "${{ github.event.inputs.environment }}" == "cons" ]; then
+            echo "Deploying to Cons Environment..."
+            # Add your specific deployment steps for Cons
+          elif [ "${{ github.event.inputs.environment }}" == "prod" ]; then
+            echo "Deploying to Prod Environment..."
+            # Add your specific deployment steps for Prod
+          fi
