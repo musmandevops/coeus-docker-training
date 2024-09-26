@@ -17,6 +17,34 @@ on:
           - rmse-prod
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Build Application
+        run: |
+          echo "Building application for ${{ github.event.inputs.environment }} environment"
+          # Add your actual build commands here (e.g., npm install, mvn package, etc.)
+          echo "Build completed"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run Tests
+        run: |
+          echo "Running tests for ${{ github.event.inputs.environment }} environment"
+          # Add your actual test commands here (e.g., npm test, pytest, etc.)
+          echo "Tests completed"
+        continue-on-error: false
+        
   deploy:
     runs-on: ubuntu-latest
 
