@@ -18,7 +18,8 @@ on:
           - prod
 
 jobs:
-  deploy:
+  deploy-dev:
+    if: ${{ github.event.inputs.environment == 'dev' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -26,22 +27,49 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      - name: Set Environment
-        run: echo "Deploying to ${{ github.event.inputs.environment }} environment"
-
-      # Add further steps for deployment based on the selected environment
-      - name: Deploy to ${{ github.event.inputs.environment }}
+      - name: Deploy to Dev Environment
         run: |
-          if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
-            echo "Deploying to Dev Environment..."
-            # Add your specific deployment steps for Dev
-          elif [ "${{ github.event.inputs.environment }}" == "int" ]; then
-            echo "Deploying to Int Environment..."
-            # Add your specific deployment steps for Int
-          elif [ "${{ github.event.inputs.environment }}" == "cons" ]; then
-            echo "Deploying to Cons Environment..."
-            # Add your specific deployment steps for Cons
-          elif [ "${{ github.event.inputs.environment }}" == "prod" ]; then
-            echo "Deploying to Prod Environment..."
-            # Add your specific deployment steps for Prod
-          fi
+          echo "Deploying to Dev Environment..."
+          # Add your specific deployment steps for Dev
+
+  deploy-int:
+    if: ${{ github.event.inputs.environment == 'int' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Deploy to Int Environment
+        run: |
+          echo "Deploying to Int Environment..."
+          # Add your specific deployment steps for Int
+
+  deploy-cons:
+    if: ${{ github.event.inputs.environment == 'cons' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Deploy to Cons Environment
+        run: |
+          echo "Deploying to Cons Environment..."
+          # Add your specific deployment steps for Cons
+
+  deploy-prod:
+    if: ${{ github.event.inputs.environment == 'prod' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Deploy to Prod Environment
+        run: |
+          echo "Deploying to Prod Environment..."
+          # Add your specific deployment steps for Prod
