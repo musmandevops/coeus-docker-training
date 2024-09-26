@@ -24,7 +24,6 @@ jobs:
 
     steps:
       - name: Set VM IP Address
-        id: set-ip
         run: |
           if [[ "${{ github.event.inputs.environment }}" == "rmse-dev" ]]; then
             echo "VM_IP=128.2.1.2" >> $GITHUB_ENV
@@ -43,4 +42,4 @@ jobs:
         run: |
           echo "Deploying to ${{ github.event.inputs.environment }} Environment..."
           echo "Connecting to VM with IP: $VM_IP"
-          echo "ssh user@$VM_IP your-deployment-commands-here"
+          echo "VM IP Address is: $VM_IP"
