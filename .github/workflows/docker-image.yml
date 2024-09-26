@@ -6,70 +6,41 @@ on:
       branch:
         description: 'Branch to deploy'
         required: true
-        default: 'main'
+        default: 'develop'
       environment:
         description: 'Select the environment'
         required: true
         type: choice
         options:
-          - dev
-          - int
-          - cons
-          - prod
+          - rmse-dev
+          - rmse-qa
+          - rmse-prod
 
 jobs:
-  deploy-dev:
-    if: ${{ github.event.inputs.environment == 'dev' }}
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      VM_IP: ${{ steps.set-ip.outputs.vm_ip }}
+
     steps:
+      - name: Set VM IP Address
+        id: set-ip
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" == "rmse-dev" ]]; then
+            echo "VM_IP=128.2.1.2" >> $GITHUB_ENV
+          elif [[ "${{ github.event.inputs.environment }}" == "rmse-qa" ]]; then
+            echo "VM_IP=128.2.1.3" >> $GITHUB_ENV
+          elif [[ "${{ github.event.inputs.environment }}" == "rmse-prod" ]]; then
+            echo "VM_IP=128.2.1.4" >> $GITHUB_ENV
+          fi
+
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      - name: Deploy to Dev Environment
+      - name: Deploy to ${{ github.event.inputs.environment }} Environment
         run: |
-          echo "Deploying to Dev Environment..."
-          # Add your specific deployment steps for Dev
-
-  deploy-int:
-    if: ${{ github.event.inputs.environment == 'int' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
-      - name: Deploy to Int Environment
-        run: |
-          echo "Deploying to Int Environment..."
-          # Add your specific deployment steps for Int
-
-  deploy-cons:
-    if: ${{ github.event.inputs.environment == 'cons' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
-      - name: Deploy to Cons Environment
-        run: |
-          echo "Deploying to Cons Environment..."
-          # Add your specific deployment steps for Cons
-
-  deploy-prod:
-    if: ${{ github.event.inputs.environment == 'prod' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
-      - name: Deploy to Prod Environment
-        run: |
-          echo "Deploying to Prod Environment..."
-          # Add your specific deployment steps for Prod
+          echo "Deploying to ${{ github.event.inputs.environment }} Environment..."
+          echo "Connecting to VM with IP: $VM_IP"
+          echo "ssh user@$VM_IP your-deployment-commands-here"
