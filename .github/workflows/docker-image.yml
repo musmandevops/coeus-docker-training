@@ -19,8 +19,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      VM_IP: ${{ steps.set-ip.outputs.vm_ip }}
 
     steps:
       - name: Set VM IP Address
